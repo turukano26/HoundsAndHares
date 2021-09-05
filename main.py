@@ -1,3 +1,5 @@
+import copy
+
 adjacencyDict = {
     0:{1,11,21},
     1:{0,11,12,2},
@@ -29,17 +31,34 @@ class GameState:
         }
         self.turn = turn
 
+    def moveHare(self, newLocation):
+        self.creatures["hare"] = newLocation
+        self.turn = "hounds"
+
+
+
 
 intialState = GameState(0,3,4,23,"hare")
 
 
 def haresPossibleMoves(gameState):
+    #the array that will hold all the resulting gameStates after a single hare movement
+    returnStates = []   
+
+    #gets all spaces adjacent to the hare
     moves = adjacencyDict[gameState.creatures["hare"]]
-    
+
+    #removes all spaces that another creature is occupying
     for h in gameState.creatures:
         moves.discard(gameState.creatures[h])
 
-    return moves
+    #cycles through all the moves and creates new gameStates for them
+    for m in moves:
+        newState = copy.deepcopy(gameState)
+        newState.moveHare(m)
+        returnStates.append(newState)
+
+    return returnStates
 
 
 def houndsPossibleMoves(gameState):
@@ -60,4 +79,5 @@ def houndsPossibleMoves(gameState):
 
     return movesList
 
+haresPossibleMoves(intialState)
 houndsPossibleMoves(intialState)
